@@ -74,6 +74,13 @@ const PROJECT_SKILLS = [
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Ritual Timers", "Vercel"],
   },
   {
+    name: "Popcorn & Company",
+    type: "popcorn",
+    color: "from-amber-500 to-yellow-500",
+    glow: "rgba(245,158,11,0.25)",
+    stack: ["Angular 14+", "TypeScript", "RxJS", "PrimeNG", "Vercel"],
+  },
+  {
     name: "Clinical EMR System",
     type: "clinical",
     color: "from-blue-500 to-cyan-500",

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { ArrowUpRight, Sparkles, Send } from "lucide-react";
+import { ArrowUpRight, Sparkles, Send, Box, Layers } from "lucide-react";
 import { GithubIcon } from "@/components/ui/Icons";
 
 /* ── 1. Social Flip Button ───────────────────────────────── */
@@ -71,12 +71,14 @@ export function SocialFlipButton({
 /* ── 2. Pop Button ───────────────────────────────────────── */
 export interface PopButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
+  icon?: any;
   onClick?: () => void;
   className?: string;
 }
 
 export function PopButton({
   children,
+  icon: Icon = Box,
   onClick,
   className,
   ...props
@@ -88,6 +90,8 @@ export function PopButton({
     setTimeout(() => setPopped(false), 500);
     onClick?.();
   };
+
+  const IconComp = Icon || Box;
 
   return (
     <motion.button
@@ -103,7 +107,7 @@ export function PopButton({
       {popped && (
         <span className="absolute inset-0 bg-white/30 rounded-2xl animate-ping pointer-events-none" />
       )}
-      <Sparkles className="w-4 h-4 text-amber-300 shrink-0" />
+      <IconComp className="w-4.5 h-4.5 text-cyan-300 shrink-0" />
       <span className="flex items-center space-x-2">{children}</span>
     </motion.button>
   );

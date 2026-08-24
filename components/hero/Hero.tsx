@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Download, MapPin, Zap, CheckCircle2, Sparkles } from "lucide-react";
+import { ArrowRight, Download, MapPin, Zap, CheckCircle2, Sparkles, Box } from "lucide-react";
 import { siteConfig } from "@/data/siteConfig";
 import { AnimatedTooltip } from "@/components/ui/animated-tooltip";
 import { SocialFlipButton, PopButton, CreepyButton } from "@/components/ui/vengence-buttons";
@@ -60,7 +60,7 @@ export function Hero() {
       <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 z-30" />
 
       {/* ── Main Container ───────────────────────────────────── */}
-      <section aria-label="Hero Section" className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-6 sm:pt-7 lg:pt-8 pb-6 sm:pb-8 flex-1">
+      <section aria-label="Hero Section" className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-5 sm:pt-7 lg:pt-8 pb-6 sm:pb-8 flex-1">
 
         {/* Upper Availability & Location Pill */}
         <FadeUp delay={0.05} className="flex items-center gap-3 mb-4 sm:mb-6">
@@ -114,10 +114,13 @@ export function Hero() {
             <FadeUp delay={0.3} className="space-y-6 pt-2">
               <div className="flex flex-wrap items-center gap-4">
                 {/* Primary Vengence Pop Button */}
-                <PopButton onClick={() => {
-                  const el = document.getElementById("projects");
-                  el?.scrollIntoView({ behavior: "smooth" });
-                }}>
+                <PopButton
+                  icon={Box}
+                  onClick={() => {
+                    const el = document.getElementById("projects");
+                    el?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
                   <span>Explore 3D Work Showcase</span>
                   <ArrowRight className="w-4 h-4" />
                 </PopButton>

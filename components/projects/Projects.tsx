@@ -151,48 +151,48 @@ export function Projects() {
     ? projectsData
     : filterCategory === "enterprise"
     ? projectsData.filter(p => ["clinical", "hr", "inventory"].includes(p.placeholderMockupType))
-    : projectsData.filter(p => ["photography", "gym", "tea"].includes(p.placeholderMockupType));
+    : projectsData.filter(p => ["photography", "gym", "tea", "popcorn"].includes(p.placeholderMockupType));
 
   return (
     <section
       id="projects"
       aria-label="Selected Projects Showcase"
-      className="relative py-16 md:py-24 px-4 md:px-8 max-w-7xl mx-auto overflow-hidden"
+      className="relative py-12 sm:py-16 md:py-24 px-3 sm:px-6 md:px-8 max-w-7xl mx-auto overflow-hidden"
     >
       {/* Top Ambient Accent Border */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col space-y-3"
+          className="flex flex-col space-y-2.5 sm:space-y-3"
         >
-          <div className="inline-flex items-center space-x-2 font-mono text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
+          <div className="inline-flex items-center space-x-2 font-mono text-[10px] sm:text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
             <FolderKanban className="w-3.5 h-3.5" />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400">EXECUTIVE SHOWCASE</span>
           </div>
-          <h2 className="font-sans font-black text-3xl md:text-5xl text-neutral-900 dark:text-white tracking-tight">
+          <h2 className="font-sans font-black text-2xl sm:text-3xl md:text-5xl text-neutral-900 dark:text-white tracking-tight leading-tight">
             Featured <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400">Enterprise &amp; Production Work.</span>
           </h2>
-          <p className="font-sans text-sm text-neutral-500 dark:text-slate-400 max-w-md">
+          <p className="font-sans text-xs sm:text-sm text-neutral-500 dark:text-slate-400 max-w-md leading-relaxed">
             Click any card to launch the comprehensive architecture case study and engineering breakdown.
           </p>
         </motion.div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setFilterCategory(cat.id)}
-              className={`px-4 py-2 rounded-full font-mono text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-mono text-[11px] sm:text-xs font-bold transition-all cursor-pointer ${
                 filterCategory === cat.id
-                  ? "bg-neutral-900 text-white shadow-md"
-                  : "bg-white border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
+                  ? "bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 shadow-md"
+                  : "bg-white dark:bg-slate-900 border border-neutral-200 dark:border-slate-800 text-neutral-600 dark:text-slate-300 hover:bg-neutral-50 dark:hover:bg-slate-800"
               }`}
             >
               {cat.label}
