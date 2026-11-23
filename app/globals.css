@@ -377,3 +377,30 @@ body {
   border-top: 1px solid transparent;
   border-image: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3) 50%, transparent) 1;
 }
+
+/* ─── HAND WAVE ANIMATION ────────────────────────────────── */
+@keyframes waveHand {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  20%, 60% {
+    transform: rotate(14deg);
+  }
+  40%, 80% {
+    transform: rotate(-10deg);
+  }
+}
+
+.animate-wave {
+  display: inline-block;
+  animation: waveHand 2s infinite ease-in-out;
+  transform-origin: 70% 70%;
+}
+
+/* ─── WARM SUNSET GLOW ───────────────────────────────────── */
+.glow-amber {
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.35);
+}
+.glow-orange {
+  box-shadow: 0 0 45px rgba(249, 115, 22, 0.4);
+}

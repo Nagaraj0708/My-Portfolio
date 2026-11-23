@@ -21,10 +21,15 @@ export function ScrollToTop() {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    const lenis = typeof window !== "undefined" ? (window as any).__lenis : null;
+    if (lenis) {
+      lenis.scrollTo(0, { duration: 1.0 });
+    } else {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (

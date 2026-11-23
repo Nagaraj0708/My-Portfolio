@@ -7,7 +7,7 @@ import { Briefcase, Building2, Calendar, Award, ExternalLink, CheckCircle2, Code
 export function Experience() {
   const timelineData = [
     {
-      title: "11/2025 — Present",
+      title: "12/2025 — Present",
       content: (
         <div className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl shadow-xl space-y-4 sm:space-y-5">
           {/* Role Header */}
@@ -25,9 +25,15 @@ export function Experience() {
               </span>
             </div>
 
-            <span className="font-mono text-[10px] sm:text-xs font-extrabold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/60 px-3 sm:px-3.5 py-0.5 sm:py-1 rounded-full border border-blue-200 dark:border-blue-800/80 w-fit shadow-2xs">
-              CURRENT ROLE
-            </span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-mono text-[10px] sm:text-xs font-extrabold text-amber-600 dark:text-amber-400 bg-amber-500/10 dark:bg-amber-500/20 px-3 sm:px-3.5 py-0.5 sm:py-1 rounded-full border border-amber-500/30 flex items-center gap-1.5 shadow-2xs">
+                <Award className="w-3.5 h-3.5 text-amber-500" />
+                <span>Rising Star Award Winner</span>
+              </span>
+              <span className="font-mono text-[10px] sm:text-xs font-extrabold text-[#FF6600] bg-[#FF6600]/10 px-3 sm:px-3.5 py-0.5 sm:py-1 rounded-full border border-[#FF6600]/30 w-fit shadow-2xs">
+                CURRENT ROLE
+              </span>
+            </div>
           </div>
 
           {/* Impact Statement */}

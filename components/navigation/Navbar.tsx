@@ -2,251 +2,274 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Home, User, Briefcase, Wrench, Mail, ArrowUpRight } from "lucide-react";
+import {
+  Menu,
+  X,
+  Home,
+  User,
+  Briefcase,
+  Wrench,
+  Mail,
+  ArrowUpRight,
+  FileText,
+} from "lucide-react";
 import { siteConfig } from "@/data/siteConfig";
 
 const navItems = [
   { label: "Home", sectionId: "hero", href: "/#hero", icon: Home },
-  { label: "About", sectionId: "about", href: "/#about", icon: User },
-  { label: "Projects", sectionId: "projects", href: "/#projects", icon: Briefcase },
   { label: "Services", sectionId: "services", href: "/#services", icon: Wrench },
+  { label: "Projects", sectionId: "projects", href: "/#projects", icon: Briefcase },
+  { label: "About", sectionId: "about", href: "/#about", icon: User },
   { label: "Contact", sectionId: "contact", href: "/#contact", icon: Mail },
 ];
 
 export function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [hoveredSection, setHoveredSection] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
-  // ScrollSpy for single-page homepage navigation
   useEffect(() => {
     if (pathname !== "/") return;
 
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 180;
+      const scrollY = window.scrollY;
+      setScrolled(scrollY > 25);
+
+      if (scrollY < 120) {
+        setActiveSection("hero");
+        return;
+      }
 
       for (let i = navItems.length - 1; i >= 0; i--) {
         const section = document.getElementById(navItems[i].sectionId);
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(navItems[i].sectionId);
-          break;
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= 220) {
+            setActiveSection(navItems[i].sectionId);
+            break;
+          }
         }
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [pathname]);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, item: typeof navItems[0]) => {
-    if (pathname === "/") {
-      e.preventDefault();
-      if (item.sectionId === "hero") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        setActiveSection("hero");
-        return;
-      }
-      const elem = document.getElementById(item.sectionId);
-      if (elem) {
-        const top = elem.getBoundingClientRect().top + window.scrollY - 80;
-        window.scrollTo({ top, behavior: "smooth" });
-        setActiveSection(item.sectionId);
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    item: (typeof navItems)[0]
+  ) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    setActiveSection(item.sectionId);
+
+    const lenis = typeof window !== "undefined" ? (window as any).__lenis : null;
+
+    if (item.sectionId === "hero") {
+      if (lenis) {
+        lenis.scrollTo(0, { duration: 1.0 });
       } else {
         window.scrollTo({ top: 0, behavior: "smooth" });
-        setActiveSection(item.sectionId);
+      }
+      return;
+    }
+
+    const elem = document.getElementById(item.sectionId);
+    if (elem) {
+      if (lenis) {
+        lenis.scrollTo(elem, { offset: -70, duration: 1.0 });
+      } else {
+        const top = elem.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    } else {
+      if (lenis) {
+        lenis.scrollTo(0, { duration: 1.0 });
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
   };
 
   return (
     <>
-      {/* Floating Navigation Header */}
-      <header className="fixed top-5 inset-x-0 z-50 flex justify-end md:justify-center px-4 sm:px-6 pointer-events-none">
+      {/* Floating Capsule Header */}
+      <header className="fixed top-4 inset-x-0 z-50 flex justify-center px-4 sm:px-6 pointer-events-none">
         <nav
-          className="pointer-events-auto bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/90 dark:border-slate-800 rounded-full p-1.5 md:px-3.5 md:py-1.5 shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex items-center transition-colors duration-300"
+          onMouseLeave={() => setHoveredSection(null)}
+          className={`pointer-events-auto backdrop-blur-2xl rounded-full px-3 py-2 sm:px-5 sm:py-2.5 flex items-center justify-between gap-3 sm:gap-6 md:gap-8 max-w-4xl transition-all duration-300 ${
+            scrolled
+              ? "bg-[#070A12]/95 border border-white/20 shadow-[0_16px_50px_rgba(0,0,0,0.5)] scale-[0.99]"
+              : "bg-[#0A0D14]/90 border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.35)] scale-100"
+          }`}
           aria-label="Main Navigation"
         >
-          {/* Desktop Nav Items */}
+          {/* Brand Monogram Badge */}
+          <Link
+            href="/#hero"
+            onClick={(e) =>
+              handleNavClick(e, {
+                label: "Home",
+                sectionId: "hero",
+                href: "/#hero",
+                icon: Home,
+              })
+            }
+            className="flex items-center gap-2.5 group cursor-pointer select-none"
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#FF5500] to-[#FF7711] text-white font-mono font-black text-xs flex items-center justify-center shadow-md shadow-[#FF6600]/30 group-hover:scale-105 group-hover:shadow-[#FF6600]/50 transition-all">
+              NK
+            </div>
+            <div className="flex flex-col text-left">
+              <span className="font-mono text-xs font-black tracking-wider text-white group-hover:text-[#FF6600] transition-colors">
+                NAGARAJ
+              </span>
+              <span className="font-mono text-[9px] text-[#FF6600] font-semibold tracking-widest leading-none">
+                FRONT-END DEVELOPER
+              </span>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation Links with Magnetic Gliding Hover & Active Pill */}
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
-              const IconComp = item.icon;
-              const isActive =
-                pathname === "/"
-                  ? activeSection === item.sectionId
-                  : item.href.includes(pathname);
+              const isActive = activeSection === item.sectionId;
 
               return (
                 <Link
                   key={item.label}
                   href={item.href}
+                  onMouseEnter={() => setHoveredSection(item.sectionId)}
                   onClick={(e) => handleNavClick(e, item)}
-                  data-cursor="OPEN"
-                  className={`relative px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 flex items-center space-x-2 ${
+                  className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-colors duration-200 select-none ${
                     isActive
-                      ? "text-white dark:text-slate-900 font-bold"
-                      : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-slate-800/80"
+                      ? "text-white font-bold"
+                      : "text-neutral-400 hover:text-white"
                   }`}
                 >
-                  {isActive && (
+                  {/* Fluid Gliding Hover Pill */}
+                  {hoveredSection === item.sectionId && !isActive && (
                     <motion.span
-                      layoutId="activePill"
-                      className="absolute inset-0 bg-slate-900 dark:bg-white rounded-full -z-10"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      layoutId="navHoverPill"
+                      className="absolute inset-0 bg-white/10 rounded-full -z-10"
+                      transition={{
+                        type: "spring",
+                        stiffness: 420,
+                        damping: 30,
+                      }}
                     />
                   )}
-                  <span className="flex items-center space-x-1.5 z-10">
-                    <IconComp
-                      className={`w-3.5 h-3.5 ${
-                        isActive
-                          ? "text-white dark:text-slate-900"
-                          : "text-slate-400 dark:text-slate-500"
-                      }`}
+
+                  {/* Clean Signature Orange Active Indicator with Aura */}
+                  {isActive && (
+                    <motion.span
+                      layoutId="navActivePill"
+                      className="absolute inset-0 bg-gradient-to-r from-[#FF5500] to-[#FF7711] rounded-full -z-10 shadow-[0_0_20px_rgba(255,102,0,0.55)] border border-white/20"
+                      transition={{
+                        type: "spring",
+                        stiffness: 420,
+                        damping: 32,
+                      }}
                     />
-                    <span>{item.label}</span>
-                  </span>
+                  )}
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
           </div>
 
-          {/* Mobile Header Compact Trigger */}
-          <div className="flex md:hidden items-center justify-center">
-            <button
-              onClick={() => setMobileMenuOpen(true)}
-              className="p-2.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-lg hover:scale-105 transition-all cursor-pointer flex items-center justify-center border border-slate-800 dark:border-slate-200"
-              aria-label="Open navigation menu"
-            >
+          {/* Mobile Menu Button with Animated Transformation */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-full text-neutral-300 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Toggle mobile menu"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5 text-[#FF6600]" />
+            ) : (
               <Menu className="w-5 h-5" />
-            </button>
-          </div>
+            )}
+          </button>
         </nav>
       </header>
 
-      {/* Mobile Navigation Studio Overlay (Clean & Spacious) */}
+      {/* Mobile Animated Dropdown with Backdrop Blur Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-[100] bg-slate-950/98 backdrop-blur-2xl px-6 py-8 sm:px-8 flex flex-col justify-between md:hidden text-white overflow-hidden"
-          >
-            {/* Top Accent Ambient Line */}
-            <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
+          <>
+            {/* Backdrop Dimmer */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+            />
 
-            {/* Top Header */}
-            <div className="flex items-center justify-between pt-2 pb-6 border-b border-slate-900">
-              <div className="flex items-center space-x-2">
-                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                <span className="font-mono text-xs font-black uppercase tracking-widest text-white">
-                  NAGARAJ K
-                </span>
-              </div>
-
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:border-slate-700 transition-all cursor-pointer"
-                aria-label="Close navigation menu"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Central Spacious Navigation Links */}
-            <nav className="my-auto py-8 space-y-6">
+            {/* Menu Panel */}
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 350, damping: 28 }}
+              className="fixed inset-x-4 top-20 z-50 p-5 rounded-3xl bg-[#0A0D14]/95 backdrop-blur-2xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col space-y-2 md:hidden"
+            >
               {navItems.map((item, idx) => {
-                const isActive =
-                  pathname === "/"
-                    ? activeSection === item.sectionId
-                    : item.href.includes(pathname);
+                const IconComp = item.icon;
+                const isActive = activeSection === item.sectionId;
 
                 return (
                   <motion.div
                     key={item.label}
-                    initial={{ opacity: 0, x: -20 }}
+                    initial={{ opacity: 0, x: -12 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: idx * 0.04 }}
+                    transition={{ delay: idx * 0.04 }}
                   >
                     <Link
                       href={item.href}
-                      onClick={(e) => {
-                        setMobileMenuOpen(false);
-                        handleNavClick(e, item);
-                      }}
-                      className="group flex items-center justify-between py-2 border-b border-slate-900/80 transition-all"
+                      onClick={(e) => handleNavClick(e, item)}
+                      className={`flex items-center justify-between p-3.5 rounded-2xl font-mono text-sm font-bold transition-all ${
+                        isActive
+                          ? "bg-gradient-to-r from-[#FF5500] to-[#FF7711] text-white shadow-lg shadow-[#FF6600]/30"
+                          : "text-neutral-300 hover:bg-white/10 hover:text-white"
+                      }`}
                     >
                       <div className="flex items-center space-x-3">
-                        {isActive && (
-                          <motion.span
-                            layoutId="activeDot"
-                            className="w-2 h-2 rounded-full bg-blue-500 shrink-0"
-                          />
-                        )}
-                        <span className={`font-sans font-black text-3xl sm:text-4xl tracking-tight transition-colors duration-300 ${
-                          isActive
-                            ? "bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-indigo-300"
-                            : "text-slate-300 group-hover:text-white"
-                        }`}>
-                          {item.label}
-                        </span>
+                        <IconComp className={`w-4 h-4 ${isActive ? "text-white" : "text-[#FF6600]"}`} />
+                        <span>{item.label}</span>
                       </div>
-
-                      <span className={`font-mono text-xs font-bold transition-colors ${
-                        isActive ? "text-blue-400" : "text-slate-600 group-hover:text-slate-400"
-                      }`}>
-                        0{idx + 1}
-                      </span>
+                      <ArrowUpRight className="w-4 h-4 opacity-50" />
                     </Link>
                   </motion.div>
                 );
               })}
-            </nav>
 
-            {/* Clean Studio Footer */}
-            <div className="pt-6 border-t border-slate-900 flex flex-col space-y-4">
-              <div className="flex items-center justify-between font-mono text-xs text-slate-400">
+              <div className="pt-3 border-t border-white/10 flex gap-2">
                 <a
-                  href={`mailto:${siteConfig.email}`}
-                  className="hover:text-white transition-colors flex items-center space-x-1.5"
+                  href={siteConfig.resumePdf}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download="Nagaraj Resume.pdf"
+                  className="flex-1 py-3 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-mono text-xs font-bold text-center border border-white/10 transition-colors"
                 >
-                  <span>{siteConfig.email}</span>
-                  <ArrowUpRight className="w-3 h-3 text-slate-500" />
+                  Download CV
                 </a>
-                <span className="text-slate-600">Chennai, TN</span>
+                <a
+                  href="#contact"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex-1 py-3 rounded-2xl bg-[#FF6600] hover:bg-[#E65C00] text-white font-mono text-xs font-bold text-center shadow-lg shadow-[#FF6600]/30 transition-colors"
+                >
+                  Get in Touch
+                </a>
               </div>
-
-              <div className="flex items-center justify-between font-mono text-[11px] text-slate-500">
-                <div className="flex items-center space-x-4">
-                  <a
-                    href={siteConfig.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-slate-300 transition-colors"
-                  >
-                    GitHub
-                  </a>
-                  <span>•</span>
-                  <a
-                    href={siteConfig.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-slate-300 transition-colors"
-                  >
-                    LinkedIn
-                  </a>
-                </div>
-                <span className="text-emerald-400 font-semibold flex items-center space-x-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                  <span>Available</span>
-                </span>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

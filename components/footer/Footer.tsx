@@ -8,15 +8,20 @@ import { LinkedInIcon, GithubIcon } from "@/components/ui/Icons";
 const footerNav = [
   { label: "Home", href: "#hero" },
   { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
   { label: "Services", href: "#services" },
+  { label: "Projects", href: "#projects" },
   { label: "Experience", href: "#experience" },
   { label: "Contact", href: "#contact" },
 ];
 
 export function Footer() {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const lenis = typeof window !== "undefined" ? (window as any).__lenis : null;
+    if (lenis) {
+      lenis.scrollTo(0, { duration: 1.0 });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
