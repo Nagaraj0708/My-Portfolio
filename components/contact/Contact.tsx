@@ -30,27 +30,88 @@ export function Contact() {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [selectedType, setSelectedType] = useState(INQUIRY_TYPES[0]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
+    _honey: "",
   });
 
   const dispatchBtnRef = useMagnetic<HTMLButtonElement>(0.25, 75);
   const copyBtnRef = useMagnetic<HTMLButtonElement>(0.35, 50);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) return;
+
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setErrorMessage(null);
+
+    try {
+      // 1. Validate & attempt server-side Resend dispatch via /api/contact
+      const apiRes = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          scope: selectedType,
+          message: formData.message,
+          _honey: formData._honey,
+        }),
+      });
+
+      const apiData = await apiRes.json();
+
+      if (!apiRes.ok || !apiData.ok) {
+        throw new Error(apiData.error || "Failed to send message.");
+      }
+
+      // 2. If server doesn't have RESEND_API_KEY configured, relay directly via FormSubmit.co AJAX
+      if (apiData.provider === "client-relay") {
+        const targetEmail = apiData.targetEmail || siteConfig.email;
+        const relayRes = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            scope: selectedType,
+            message: formData.message,
+            _subject: `[Portfolio • ${selectedType}] New message from ${formData.name}`,
+            _replyto: formData.email,
+            _template: "table",
+            _captcha: "false",
+          }),
+        });
+
+        const relayData = await relayRes.json().catch(() => null);
+        if (!relayRes.ok || relayData?.success === "false") {
+          throw new Error(
+            relayData?.message ||
+              "Unable to reach mail relay. Please email Naga97raj@gmail.com directly."
+          );
+        }
+      }
+
       setFormSubmitted(true);
+      setFormData({ name: "", email: "", message: "", _honey: "" });
       setTimeout(() => {
         setFormSubmitted(false);
-        setFormData({ name: "", email: "", message: "" });
-      }, 5000);
-    }, 800);
+      }, 6000);
+    } catch (err) {
+      setErrorMessage(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong while sending your message."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleCopyEmail = () => {
@@ -248,6 +309,17 @@ export function Contact() {
             </motion.div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col space-y-5 relative z-10">
+              {/* Spam Honeypot */}
+              <input
+                type="text"
+                name="_honey"
+                tabIndex={-1}
+                autoComplete="off"
+                value={formData._honey}
+                onChange={(e) => setFormData({ ...formData, _honey: e.target.value })}
+                className="hidden"
+                aria-hidden="true"
+              />
               
               {/* Console Header Bar */}
               <div className="flex items-center justify-between border-b border-white/10 pb-3.5 mb-0.5">
@@ -352,6 +424,19 @@ export function Contact() {
                   className="w-full px-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/10 text-white font-sans text-xs sm:text-sm placeholder:text-slate-500 focus:bg-white/[0.07] focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all outline-none resize-none"
                 />
               </div>
+
+              {/* Error Feedback Banner */}
+              {errorMessage && (
+                <div className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-300 font-sans text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <span>{errorMessage}</span>
+                  <a
+                    href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(`[Portfolio • ${selectedType}] Inquiry from ${formData.name}`)}&body=${encodeURIComponent(formData.message)}`}
+                    className="font-mono text-[11px] font-bold text-white underline shrink-0 hover:text-[#FF6600]"
+                  >
+                    Open Mail App →
+                  </a>
+                </div>
+              )}
 
               {/* Apple Pro Flagship Action CTA */}
               <div className="pt-2">
