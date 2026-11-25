@@ -49,7 +49,7 @@ export function Contact() {
     setErrorMessage(null);
 
     try {
-      // 1. Validate & attempt server-side Resend dispatch via /api/contact
+      // Single fast server dispatch via /api/contact
       const apiRes = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -66,36 +66,6 @@ export function Contact() {
 
       if (!apiRes.ok || !apiData.ok) {
         throw new Error(apiData.error || "Failed to send message.");
-      }
-
-      // 2. If server doesn't have RESEND_API_KEY configured, relay directly via FormSubmit.co AJAX
-      if (apiData.provider === "client-relay") {
-        const targetEmail = apiData.targetEmail || siteConfig.email;
-        const relayRes = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            scope: selectedType,
-            message: formData.message,
-            _subject: `[Portfolio • ${selectedType}] New message from ${formData.name}`,
-            _replyto: formData.email,
-            _template: "table",
-            _captcha: "false",
-          }),
-        });
-
-        const relayData = await relayRes.json().catch(() => null);
-        if (!relayRes.ok || relayData?.success === "false") {
-          throw new Error(
-            relayData?.message ||
-              "Unable to reach mail relay. Please email Naga97raj@gmail.com directly."
-          );
-        }
       }
 
       setFormSubmitted(true);
@@ -166,10 +136,10 @@ export function Contact() {
 
       {/* ── Apple-Grade Space Black Dual-Pane Architecture ── */}
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch relative z-10">
-        
+
         {/* ── Left Pane: Direct Communication Hub (5 Cols) ── */}
         <div className="lg:col-span-5 p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.08)] backdrop-blur-3xl relative overflow-hidden flex flex-col justify-between space-y-6">
-          
+
           {/* Subtle Ambient Radial Highlight */}
           <div className="absolute -top-12 -left-12 w-48 h-48 bg-[#FF6600]/10 rounded-full blur-[80px] pointer-events-none" />
 
@@ -189,7 +159,7 @@ export function Contact() {
 
           {/* Channel Cards Stack */}
           <div className="flex flex-col space-y-3 relative z-10">
-            
+
             {/* Primary Email Card */}
             <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-white/20 shadow-xs flex items-center justify-between group transition-all">
               <div className="flex items-center space-x-3 min-w-0">
@@ -284,7 +254,7 @@ export function Contact() {
 
         {/* ── Right Pane: Apple-Grade Message Dispatch Console (7 Cols) ── */}
         <div className="lg:col-span-7 p-6 sm:p-8 rounded-3xl bg-white/[0.03] border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.08)] backdrop-blur-3xl relative overflow-hidden flex flex-col justify-between">
-          
+
           {/* Subtle Ambient Radial Highlight */}
           <div className="absolute -bottom-12 -right-12 w-56 h-56 bg-[#FF6600]/8 rounded-full blur-[90px] pointer-events-none" />
 
@@ -320,7 +290,7 @@ export function Contact() {
                 className="hidden"
                 aria-hidden="true"
               />
-              
+
               {/* Console Header Bar */}
               <div className="flex items-center justify-between border-b border-white/10 pb-3.5 mb-0.5">
                 <div className="flex items-center gap-2">
@@ -348,11 +318,10 @@ export function Contact() {
                         key={type}
                         type="button"
                         onClick={() => setSelectedType(type)}
-                        className={`font-mono text-[11px] font-semibold px-3.5 py-1.5 rounded-full border transition-all cursor-pointer ${
-                          isSelected
+                        className={`font-mono text-[11px] font-semibold px-3.5 py-1.5 rounded-full border transition-all cursor-pointer ${isSelected
                             ? "bg-white text-slate-950 border-white shadow-md shadow-white/10"
                             : "bg-white/[0.04] text-slate-400 border-white/10 hover:bg-white/[0.08] hover:text-white"
-                        }`}
+                          }`}
                       >
                         {type}
                       </button>
@@ -446,7 +415,7 @@ export function Contact() {
                   disabled={isSubmitting}
                   className="w-full group relative inline-flex items-center justify-center space-x-2 font-mono text-xs sm:text-sm font-bold py-3.5 px-6 rounded-2xl bg-white hover:bg-slate-100 text-slate-950 shadow-[0_8px_24px_rgba(255,255,255,0.14)] hover:shadow-[0_12px_32px_rgba(255,255,255,0.22)] hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer select-none disabled:opacity-50"
                 >
-                  <span>{isSubmitting ? "Encrypting & Sending..." : "Dispatch Message"}</span>
+                  <span>{isSubmitting ? "Sending..." : "Dispatch Message"}</span>
                   <ArrowRight className="w-4 h-4 text-[#FF6600] group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
