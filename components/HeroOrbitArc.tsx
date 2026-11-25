@@ -15,7 +15,7 @@ export function HeroOrbitArc() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none select-none absolute bottom-[12px] sm:bottom-[32px] md:bottom-[44px] lg:bottom-[56px] left-1/2 -translate-x-1/2 w-[780px] max-w-[95vw] h-[400px] z-0 overflow-visible origin-bottom scale-[0.70] sm:scale-[0.84] md:scale-95 lg:scale-100 transition-transform duration-300"
+      className="pointer-events-none select-none absolute bottom-[35px] sm:bottom-[clamp(48px,9vh,95px)] left-1/2 -translate-x-1/2 w-[345px] sm:w-[clamp(500px,96vh,1080px)] h-[175px] sm:h-[clamp(250px,48vh,540px)] z-0 overflow-visible origin-bottom transition-all duration-300"
     >
       <style>{`
         @keyframes heroOrbitFloat {
@@ -23,7 +23,7 @@ export function HeroOrbitArc() {
             transform: translate(-50%, -50%) translateY(0px);
           }
           50% {
-            transform: translate(-50%, -50%) translateY(-6px);
+            transform: translate(-50%, -50%) translateY(-5px);
           }
         }
         @keyframes heroOrbitFloatApex {
@@ -31,7 +31,7 @@ export function HeroOrbitArc() {
             transform: translate(-50%, -50%) translateY(0px);
           }
           50% {
-            transform: translate(-50%, -50%) translateY(-6px);
+            transform: translate(-50%, -50%) translateY(-5px);
           }
         }
       `}</style>
@@ -70,13 +70,13 @@ export function HeroOrbitArc() {
           />
         </defs>
 
-        {/* ── 1a. Thin Solid Gradient Semicircle Arc (Hidden on mobile < 640px) ── */}
+        {/* ── 1a. Thin Solid Gradient Semicircle Arc (Visible across all viewports) ── */}
         <path
           d="M 55 395 A 345 345 0 0 1 745 395"
           fill="none"
           stroke="url(#orbitArcGradient)"
           strokeWidth="1.5"
-          className="hidden sm:block"
+          className="block"
         />
 
         {/* ── 1b. Dotted Dashed Orbit Trajectory in Orange ── */}
@@ -91,12 +91,12 @@ export function HeroOrbitArc() {
           className="block"
         />
 
-        {/* ── 2. Arc Text along larger textPath (Precisely matching the 7 icon positions) ── */}
+        {/* ── 2. Arc Text along larger textPath (Responsive typography) ── */}
         <text
           letterSpacing="6px"
           fill="#1c1c24"
           fillOpacity="0.55"
-          className="hidden lg:block font-mono text-[11px] font-medium uppercase select-none dark:fill-neutral-300 dark:fill-opacity-50"
+          className="hidden sm:block font-mono text-[10px] md:text-[11px] font-medium uppercase select-none dark:fill-neutral-300 dark:fill-opacity-50"
         >
           <textPath href="#orbitTextArcPath" startOffset="50%" textAnchor="middle">
             ANGULAR • RXJS • TYPESCRIPT • NEXT.JS • .NET CORE • REACT • TAILWIND
@@ -104,7 +104,7 @@ export function HeroOrbitArc() {
         </text>
 
         {/* ── 3. Glowing Orange (#FF6A00) Dot Travelling Continuously along Arc (9s) ── */}
-        <g className="hidden sm:block">
+        <g className="block">
           {/* Subtle Outer Halo */}
           <circle r="7" fill="#FF6A00" opacity="0.3" filter="url(#orbitDotGlow)">
             <animateMotion
@@ -132,7 +132,7 @@ export function HeroOrbitArc() {
         </g>
       </svg>
 
-      {/* ── 4. Symmetrical Celestial Orbit Nodes (EXACT 1-TO-1 MATCH WITH TEXT LABELS) ── */}
+      {/* ── 4. Symmetrical Celestial Orbit Nodes (FULLY VISIBLE ON MOBILE & DESKTOP) ── */}
 
       {/* Node 1: Lower Left (158°) — Matches text "ANGULAR" */}
       <div
@@ -141,11 +141,11 @@ export function HeroOrbitArc() {
           top: "67%",
           animation: "heroOrbitFloat 5s ease-in-out infinite 0.4s",
         }}
-        className="hidden sm:flex pointer-events-auto absolute z-20 items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-[#0E131F]/90 border border-white/90 dark:border-white/15 shadow-[0_8px_25px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_25px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-red-500/60 hover:shadow-red-500/20 transition-all cursor-pointer group"
+        className="flex pointer-events-auto absolute z-20 items-center justify-center w-7 h-7 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-[#0E131F]/95 border border-white/90 dark:border-white/15 shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-red-500/60 hover:shadow-red-500/20 transition-all cursor-pointer group"
       >
-        <AngularIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-          Angular 14+
+        <AngularIcon className="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+        <span className="absolute -bottom-6 sm:-bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[9px] sm:text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-1.5 sm:px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
+          Angular
         </span>
       </div>
 
@@ -156,11 +156,11 @@ export function HeroOrbitArc() {
           top: "36%",
           animation: "heroOrbitFloat 5s ease-in-out infinite 1.2s",
         }}
-        className="hidden sm:flex pointer-events-auto absolute z-20 items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-[#0E131F]/90 border border-white/90 dark:border-white/15 shadow-[0_8px_25px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_25px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-pink-500/60 hover:shadow-pink-500/20 transition-all cursor-pointer group"
+        className="flex pointer-events-auto absolute z-20 items-center justify-center w-7 h-7 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-[#0E131F]/95 border border-white/90 dark:border-white/15 shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-pink-500/60 hover:shadow-pink-500/20 transition-all cursor-pointer group"
       >
-        <RxjsIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-          RxJS Streams
+        <RxjsIcon className="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+        <span className="absolute -bottom-6 sm:-bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[9px] sm:text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-1.5 sm:px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
+          RxJS
         </span>
       </div>
 
@@ -171,10 +171,10 @@ export function HeroOrbitArc() {
           top: "17.5%",
           animation: "heroOrbitFloat 5s ease-in-out infinite 2.0s",
         }}
-        className="hidden sm:flex pointer-events-auto absolute z-20 items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-[#0E131F]/90 border border-white/90 dark:border-white/15 shadow-[0_8px_25px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_25px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-blue-500/60 hover:shadow-blue-500/20 transition-all cursor-pointer group"
+        className="flex pointer-events-auto absolute z-20 items-center justify-center w-7 h-7 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-[#0E131F]/95 border border-white/90 dark:border-white/15 shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-blue-500/60 hover:shadow-blue-500/20 transition-all cursor-pointer group"
       >
-        <TypeScriptIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+        <TypeScriptIcon className="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+        <span className="absolute -bottom-6 sm:-bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[9px] sm:text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-1.5 sm:px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
           TypeScript
         </span>
       </div>
@@ -186,11 +186,11 @@ export function HeroOrbitArc() {
           top: "14%",
           animation: "heroOrbitFloatApex 5s ease-in-out infinite 2.8s",
         }}
-        className="hidden sm:flex pointer-events-auto absolute z-30 items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 dark:bg-[#0E131F]/95 border border-white/90 dark:border-white/20 shadow-[0_8px_25px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_25px_rgba(0,0,0,0.6)] backdrop-blur-xl hover:scale-115 hover:border-[#FF6A00]/60 hover:shadow-[#FF6A00]/25 transition-all cursor-pointer group"
+        className="flex pointer-events-auto absolute z-30 items-center justify-center w-8 h-8 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full bg-white/95 dark:bg-[#0E131F]/95 border border-white/90 dark:border-white/20 shadow-[0_6px_20px_rgba(0,0,0,0.1)] dark:shadow-[0_6px_20px_rgba(0,0,0,0.6)] backdrop-blur-xl hover:scale-115 hover:border-[#FF6A00]/60 hover:shadow-[#FF6A00]/25 transition-all cursor-pointer group"
       >
-        <NextjsIcon className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
-        <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-          Next.js 15
+        <NextjsIcon className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+        <span className="absolute -bottom-6 sm:-bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[9px] sm:text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-1.5 sm:px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
+          Next.js
         </span>
       </div>
 
@@ -201,11 +201,11 @@ export function HeroOrbitArc() {
           top: "17.5%",
           animation: "heroOrbitFloat 5s ease-in-out infinite 3.6s",
         }}
-        className="hidden sm:flex pointer-events-auto absolute z-20 items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-[#0E131F]/90 border border-white/90 dark:border-white/15 shadow-[0_8px_25px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_25px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-purple-500/60 hover:shadow-purple-500/20 transition-all cursor-pointer group"
+        className="flex pointer-events-auto absolute z-20 items-center justify-center w-7 h-7 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-[#0E131F]/95 border border-white/90 dark:border-white/15 shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-purple-500/60 hover:shadow-purple-500/20 transition-all cursor-pointer group"
       >
-        <DotNetIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-          ASP.NET Core
+        <DotNetIcon className="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+        <span className="absolute -bottom-6 sm:-bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[9px] sm:text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-1.5 sm:px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
+          .NET
         </span>
       </div>
 
@@ -216,11 +216,11 @@ export function HeroOrbitArc() {
           top: "36%",
           animation: "heroOrbitFloat 5s ease-in-out infinite 4.4s",
         }}
-        className="hidden sm:flex pointer-events-auto absolute z-20 items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-[#0E131F]/90 border border-white/90 dark:border-white/15 shadow-[0_8px_25px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_25px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-sky-400/60 hover:shadow-sky-400/20 transition-all cursor-pointer group"
+        className="flex pointer-events-auto absolute z-20 items-center justify-center w-7 h-7 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-[#0E131F]/95 border border-white/90 dark:border-white/15 shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-sky-400/60 hover:shadow-sky-400/20 transition-all cursor-pointer group"
       >
-        <ReactIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-          React 19
+        <ReactIcon className="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+        <span className="absolute -bottom-6 sm:-bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[9px] sm:text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-1.5 sm:px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
+          React
         </span>
       </div>
 
@@ -231,11 +231,11 @@ export function HeroOrbitArc() {
           top: "67%",
           animation: "heroOrbitFloat 5s ease-in-out infinite 0.8s",
         }}
-        className="hidden sm:flex pointer-events-auto absolute z-20 items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-[#0E131F]/90 border border-white/90 dark:border-white/15 shadow-[0_8px_25px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_25px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-cyan-400/60 hover:shadow-cyan-400/20 transition-all cursor-pointer group"
+        className="flex pointer-events-auto absolute z-20 items-center justify-center w-7 h-7 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-[#0E131F]/95 border border-white/90 dark:border-white/15 shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] backdrop-blur-xl hover:scale-115 hover:border-cyan-400/60 hover:shadow-cyan-400/20 transition-all cursor-pointer group"
       >
-        <TailwindIcon className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-          Tailwind CSS
+        <TailwindIcon className="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:scale-110 transition-transform" />
+        <span className="absolute -bottom-6 sm:-bottom-7 left-1/2 -translate-x-1/2 font-mono font-bold text-[9px] sm:text-[10px] text-neutral-800 dark:text-neutral-200 bg-white/95 dark:bg-[#0B0F17]/95 px-1.5 sm:px-2 py-0.5 rounded-md shadow-md border border-neutral-200/80 dark:border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30">
+          Tailwind
         </span>
       </div>
     </div>

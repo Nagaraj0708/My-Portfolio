@@ -34,9 +34,9 @@ export interface SolarSystemProps extends React.HTMLAttributes<HTMLDivElement> {
 const DefaultIcons = {
   angular: (
     <svg viewBox="0 0 250 250" className="w-5 h-5" fill="none">
-      <polygon points="125,30 125,30 125,30 31.9,63.2 46.1,186.3 125,230 203.9,186.3 218.1,63.2" fill="#DD0031"/>
-      <polygon points="125,30 125,52.2 125,52.1 125,153.4 125,153.4 170.8,153.4 180.1,176.4 203.9,186.3 218.1,63.2" fill="#C3002F"/>
-      <polygon points="125,52.1 79.2,153.4 98.6,153.4 107.9,130.3 142.1,130.3 151.4,153.4 170.8,153.4" fill="#FFFFFF"/>
+      <polygon points="125,30 125,30 125,30 31.9,63.2 46.1,186.3 125,230 203.9,186.3 218.1,63.2" fill="#DD0031" />
+      <polygon points="125,30 125,52.2 125,52.1 125,153.4 125,153.4 170.8,153.4 180.1,176.4 203.9,186.3 218.1,63.2" fill="#C3002F" />
+      <polygon points="125,52.1 79.2,153.4 98.6,153.4 107.9,130.3 142.1,130.3 151.4,153.4 170.8,153.4" fill="#FFFFFF" />
     </svg>
   ),
   typescript: (
@@ -148,7 +148,7 @@ export const SolarSystem = React.forwardRef<HTMLDivElement, SolarSystemProps>(
       <div
         ref={ref}
         className={cn(
-          "relative flex items-center justify-center w-full max-w-[940px] h-[360px] md:h-[500px] perspective-[1200px] select-none overflow-visible mx-auto",
+          "relative flex items-center justify-center w-full max-w-[940px] h-[360px] md:h-[500px] perspective-[1200px] select-none overflow-hidden mx-auto",
           className
         )}
         {...props}
@@ -163,16 +163,21 @@ export const SolarSystem = React.forwardRef<HTMLDivElement, SolarSystemProps>(
               }
               @media (max-width: 768px) {
                 :root {
-                  --radius-inner: 100px;
-                  --radius-mid: 165px;
-                  --radius-outer: 230px;
+                  --radius-inner: 80px;
+                  --radius-mid: 130px;
+                  --radius-outer: 180px;
                 }
               }
               @media (max-width: 480px) {
                 :root {
-                  --radius-inner: 70px;
-                  --radius-mid: 115px;
-                  --radius-outer: 160px;
+                  --radius-inner: 46px;
+                  --radius-mid: 78px;
+                  --radius-outer: 110px;
+                }
+                .orbit-logo-card {
+                  padding: 0.25rem 0.5rem !important;
+                  gap: 4px !important;
+                  font-size: 9px !important;
                 }
               }
               @keyframes custom-orbitMove {
@@ -239,7 +244,7 @@ export const SolarSystem = React.forwardRef<HTMLDivElement, SolarSystemProps>(
         />
 
         <div
-          className="absolute w-[360px] h-[360px] md:w-[940px] md:h-[940px] flex items-center justify-center"
+          className="absolute w-[300px] h-[300px] sm:w-[360px] sm:h-[360px] md:w-[940px] md:h-[940px] flex items-center justify-center"
           style={{
             transform: "rotateX(65deg) rotateY(-10deg)",
             transformStyle: "preserve-3d",
@@ -254,7 +259,7 @@ export const SolarSystem = React.forwardRef<HTMLDivElement, SolarSystemProps>(
             }}
           >
             <div className="absolute w-[90px] h-[90px] md:w-[120px] md:h-[120px] rounded-full filter blur-md animate-custom-sun-pulse z-10 bg-blue-500/30" />
-            
+
             {centerLogo ? (
               typeof centerLogo === "string" ? (
                 <img

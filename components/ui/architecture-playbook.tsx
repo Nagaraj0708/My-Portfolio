@@ -475,7 +475,7 @@ export function ArchitecturePlaybook() {
               </div>
 
               {/* ── RIGHT SPREAD PAGE: Live Code Implementation ─── */}
-              <div className="lg:col-span-6 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-[#070A12] relative overflow-hidden">
+              <div className="lg:col-span-6 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-[#070A12] relative overflow-hidden min-w-0 w-full">
                 {/* Subtle Crease Reflection */}
                 <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent pointer-events-none" />
 
@@ -487,7 +487,7 @@ export function ArchitecturePlaybook() {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    className="relative flex flex-col h-full justify-between space-y-4"
+                    className="relative flex flex-col h-full justify-between space-y-4 min-w-0 w-full"
                   >
                     {/* Code Window Header */}
                     <div className="flex items-center justify-between pb-3 border-b border-white/10">
@@ -520,9 +520,9 @@ export function ArchitecturePlaybook() {
                     </div>
 
                     {/* Preformatted Code Box */}
-                    <div className="rounded-2xl bg-black/70 border border-white/10 p-4 font-mono text-xs text-neutral-200 overflow-x-auto max-h-[320px] leading-relaxed relative shadow-inner">
-                      <pre className="text-neutral-300">
-                        <code>{chapter.code}</code>
+                    <div className="rounded-2xl bg-black/70 border border-white/10 p-4 font-mono text-xs text-neutral-200 overflow-x-auto max-h-[320px] leading-relaxed relative shadow-inner min-w-0 w-full">
+                      <pre className="text-neutral-300 overflow-x-auto whitespace-pre max-w-full">
+                        <code className="whitespace-pre">{chapter.code}</code>
                       </pre>
                     </div>
 

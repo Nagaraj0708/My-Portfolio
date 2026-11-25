@@ -2,6 +2,8 @@
 
 import React, { useEffect } from "react";
 import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -9,6 +11,9 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
+
+    // Register GSAP plugins
+    gsap.registerPlugin(ScrollTrigger);
 
     const lenis = new Lenis({
       duration: 1.0,
@@ -22,25 +27,33 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       (window as any).__lenis = lenis;
     }
 
+    // Synchronize Lenis with GSAP ScrollTrigger
+    lenis.on("scroll", ScrollTrigger.update);
+
+    const updateTicker = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(updateTicker);
+    gsap.ticker.lagSmoothing(0);
+
     // Keep Lenis synchronized with all DOM mutations, dynamic content, and image loads
     const resizeObserver = new ResizeObserver(() => {
       lenis.resize();
+      ScrollTrigger.refresh();
     });
     resizeObserver.observe(document.body);
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    const rafId = requestAnimationFrame(raf);
-
     // Initial resize after mount and after DOM settles
     lenis.resize();
-    const timer = setTimeout(() => lenis.resize(), 500);
+    ScrollTrigger.refresh();
+    const timer = setTimeout(() => {
+      lenis.resize();
+      ScrollTrigger.refresh();
+    }, 500);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(updateTicker);
       clearTimeout(timer);
       resizeObserver.disconnect();
       if (typeof window !== "undefined") {

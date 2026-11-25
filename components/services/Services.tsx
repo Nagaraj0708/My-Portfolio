@@ -12,6 +12,8 @@ import {
   Zap,
 } from "lucide-react";
 import { servicesData } from "@/data/services";
+import { TextScramble } from "@/components/ui/TextScramble";
+import { SpringCardJump } from "@/components/ui/SpringCardJump";
 
 const SERVICE_EXTRAS = {
   "frontend-dev": {
@@ -81,7 +83,7 @@ export function Services() {
           <div>
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/5 border border-white/10 text-[#FF6600] font-mono text-xs font-bold uppercase tracking-wider mb-3">
               <Zap className="w-3.5 h-3.5" />
-              <span>Services &amp; Core Competencies</span>
+              <TextScramble text="SERVICES & CORE COMPETENCIES" />
             </div>
             <h2 className="font-sans font-black text-3xl sm:text-4xl md:text-5xl text-white tracking-tight">
               Engineered for <span className="text-[#FF6600]">Scale &amp; Precision</span>
@@ -93,67 +95,77 @@ export function Services() {
           </p>
         </div>
 
-        {/* ── Glassmorphic Service Cards Grid (Reference 1 Style) ── */}
+        {/* ── Glassmorphic Service Cards Grid with Cursor Spotlight ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {servicesData.map((service, idx) => {
             const IconComponent = iconMap[service.iconName] || Code2;
             const extra = SERVICE_EXTRAS[service.id as keyof typeof SERVICE_EXTRAS] || SERVICE_EXTRAS["frontend-dev"];
-            const isHovered = hoveredIdx === idx;
 
             return (
-              <motion.div
-                key={service.id}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onMouseLeave={() => setHoveredIdx(null)}
-                whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
-                className="relative rounded-3xl p-6 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-[#FF6600]/50 shadow-xl backdrop-blur-xl transition-all duration-300 flex flex-col justify-between group overflow-hidden"
-              >
-                {/* Ambient dynamic card glow */}
+              <SpringCardJump key={service.id} delay={idx * 0.08} className="h-full">
                 <div
-                  className="absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  style={{
-                    background: `radial-gradient(300px circle at 50% 0%, ${extra.glow}, transparent 70%)`,
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onMouseLeave={(e) => {
+                    setHoveredIdx(null);
+                    e.currentTarget.style.removeProperty("--mouse-x");
+                    e.currentTarget.style.removeProperty("--mouse-y");
                   }}
-                />
+                  onMouseMove={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    e.currentTarget.style.setProperty("--mouse-x", `${x}px`);
+                    e.currentTarget.style.setProperty("--mouse-y", `${y}px`);
+                  }}
+                  className="relative rounded-3xl p-6 bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 hover:border-[#FF6600]/50 shadow-xl backdrop-blur-xl transition-all duration-300 flex flex-col justify-between group overflow-hidden h-full"
+                >
+                  {/* Interactive cursor-following spotlight glow */}
+                  <div
+                    className="absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                    style={{
+                      background: `radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 0%), ${extra.glow}, transparent 75%)`,
+                    }}
+                  />
 
-                {/* Card Top: Number & Icon Badge */}
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="font-mono text-xs font-black text-[#FF6600] bg-[#FF6600]/10 border border-[#FF6600]/20 px-2.5 py-1 rounded-full">
-                      {service.number}
-                    </span>
-                    <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-[#FF6600] transition-all duration-300 shadow-md">
-                      <IconComponent className="w-5 h-5" />
+                  {/* Card Top: Number & Icon Badge */}
+                  <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="font-mono text-xs font-black text-[#FF6600] bg-[#FF6600]/10 border border-[#FF6600]/20 px-2.5 py-1 rounded-full">
+                        {service.number}
+                      </span>
+                      <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-[#FF6600] transition-all duration-300 shadow-md">
+                        <IconComponent className="w-5 h-5" />
+                      </div>
                     </div>
+
+                    {/* Service Title */}
+                    <h3 className="font-sans font-black text-xl text-white group-hover:text-[#FF6600] transition-colors mb-2">
+                      {service.title}
+                    </h3>
+
+                    {/* Service Description */}
+                    <p className="font-sans text-xs text-neutral-400 leading-relaxed mb-6 font-normal">
+                      {service.description}
+                    </p>
                   </div>
 
-                  {/* Service Title */}
-                  <h3 className="font-sans font-black text-xl text-white group-hover:text-[#FF6600] transition-colors mb-2">
-                    {service.title}
-                  </h3>
-
-                  {/* Service Description */}
-                  <p className="font-sans text-xs text-neutral-400 leading-relaxed mb-6 font-normal">
-                    {service.description}
-                  </p>
-                </div>
-
-                {/* Card Bottom: Bullet Points */}
-                <div className="pt-4 border-t border-white/10 space-y-2">
-                  <div className="font-mono text-[10px] uppercase font-bold tracking-wider text-[#FF6600] mb-2">
-                    {extra.badge}
-                  </div>
-                  {extra.features.map((feat, fIdx) => (
-                    <div key={fIdx} className="flex items-center gap-2 text-xs text-neutral-300">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#FF6600] shrink-0" />
-                      <span className="truncate">{feat}</span>
+                  {/* Card Bottom: Bullet Points */}
+                  <div className="pt-4 border-t border-white/10 space-y-2">
+                    <div className="font-mono text-[10px] uppercase font-bold tracking-wider text-[#FF6600] mb-2">
+                      {extra.badge}
                     </div>
-                  ))}
-                </div>
+                    {extra.features.map((feat, fIdx) => (
+                      <div key={fIdx} className="flex items-center gap-2 text-xs text-neutral-300">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#FF6600] shrink-0" />
+                        <span className="truncate">{feat}</span>
+                      </div>
+                    ))}
+                  </div>
 
-                {/* Subtle bottom border accent */}
-                <div className="absolute bottom-0 inset-x-0 h-[2px] bg-[#FF6600] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </motion.div>
+                  {/* Subtle bottom border accent */}
+                  <div className="absolute bottom-0 inset-x-0 h-[2px] bg-[#FF6600] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
+              </SpringCardJump>
             );
           })}
         </div>

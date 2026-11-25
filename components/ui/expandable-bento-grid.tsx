@@ -20,21 +20,47 @@ export function ExpandableBentoGrid({ items, className }: { items: BentoTile[]; 
 
   return (
     <div className={cn("grid grid-cols-1 md:grid-cols-3 gap-5", className)}>
-      {items.map((tile) => {
+      {items.map((tile, idx) => {
         const isExpanded = expandedId === tile.id;
 
         return (
           <motion.div
             key={tile.id}
             layout
+            initial={{ opacity: 0, y: 45, scale: 0.93 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            whileHover={{ y: -6, scale: 1.01 }}
             onClick={() => setExpandedId(isExpanded ? null : tile.id)}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            onMouseMove={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+              e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.removeProperty("--mouse-x");
+              e.currentTarget.style.removeProperty("--mouse-y");
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 280,
+              damping: 20,
+              delay: idx * 0.08,
+            }}
             className={cn(
-              "relative p-7 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl cursor-pointer overflow-hidden flex flex-col justify-between group",
+              "relative p-7 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl cursor-pointer overflow-hidden flex flex-col justify-between group will-change-transform",
               tile.colSpan || "col-span-1",
               isExpanded && "md:col-span-3 bg-slate-950 border-blue-500/80 shadow-2xl"
             )}
           >
+            {/* Cursor-following spotlight glow */}
+            <div
+              className="absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 0%), rgba(255, 102, 0, 0.12), transparent 75%)",
+              }}
+            />
             {/* Top Row */}
             <div>
               <div className="flex items-center justify-between mb-4">

@@ -16,6 +16,8 @@ import { Contact } from "@/components/contact/Contact";
 import { Footer } from "@/components/footer/Footer";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
 import { SmoothScroll } from "@/components/scroll/SmoothScroll";
+import { CustomCursor } from "@/components/ui/CustomCursor";
+import { TextScramble } from "@/components/ui/TextScramble";
 
 // ── Vengence & Aceternity UI Imports ─────────────────────────
 import { ScrollDissolveReveal } from "@/components/ui/scroll-dissolve-reveal";
@@ -146,11 +148,12 @@ const VERSE_ITEMS: VerseCardItem[] = [
 export default function Home() {
   return (
     <SmoothScroll>
-      <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#070A12] text-neutral-900 dark:text-neutral-100 relative selection:bg-[#FF6600] selection:text-white transition-colors duration-500">
+      <CustomCursor />
+      <div className="min-h-screen bg-[#FDFBF7] dark:bg-[#070A12] text-neutral-900 dark:text-neutral-100 relative selection:bg-[#FF6600] selection:text-white transition-colors duration-500 overflow-x-hidden max-w-full w-full">
         {/* Centered Floating Capsule Pill Navigation (from Reference 1) */}
         <Navbar />
 
-        <main className="relative">
+        <main className="relative overflow-x-hidden max-w-full w-full">
           {/* 1. Flagship Hero with Seated Cutout & Warm Geometric Arc */}
           <Hero />
 
@@ -171,7 +174,7 @@ export default function Home() {
             <ScrollDissolveReveal>
               <div className="text-center max-w-3xl mx-auto mb-12">
                 <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#FF6600]">
-                  SYSTEM ARCHITECTURE MATRIX
+                  <TextScramble text="SYSTEM ARCHITECTURE MATRIX" />
                 </span>
                 <h2 className="font-sans font-black text-3xl md:text-4xl text-neutral-900 dark:text-white mt-2">
                   Architectural Principles &amp; Engineering Pillars
@@ -193,7 +196,7 @@ export default function Home() {
             <ScrollDissolveReveal>
               <div className="text-center max-w-3xl mx-auto mb-5">
                 <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#FF6600]">
-                  3D CYLINDER PERSPECTIVE CAROUSEL
+                  <TextScramble text="3D CYLINDER PERSPECTIVE CAROUSEL" />
                 </span>
                 <h2 className="font-sans font-black text-2xl md:text-3xl text-white mt-1.5">
                   Featured System Deep Dives

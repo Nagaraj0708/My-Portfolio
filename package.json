@@ -11,6 +11,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@react-spring/web": "^10.1.2",
     "@types/three": "^0.185.4",
     "framer-motion": "^13.1.0",

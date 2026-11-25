@@ -81,7 +81,7 @@ export function DashboardScrollShowcase() {
       className="relative bg-[#070A12] text-white py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden border-t border-white/10"
     >
       {/* ── Soft Ambient Radial Glow ───────────────────────────── */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#FF6600]/6 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[340px] sm:w-[700px] h-[250px] sm:h-[350px] bg-[#FF6600]/6 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Section Heading */}

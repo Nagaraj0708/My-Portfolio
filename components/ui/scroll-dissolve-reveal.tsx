@@ -13,19 +13,17 @@ export function ScrollDissolveReveal({ children, className }: ScrollDissolveReve
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "center center"],
+    offset: ["start 90%", "start 60%"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.6, 1], [0.1, 0.7, 1]);
-  const filterBlur = useTransform(scrollYProgress, [0, 0.7, 1], ["blur(12px)", "blur(4px)", "blur(0px)"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [0.94, 1]);
-  const y = useTransform(scrollYProgress, [0, 1], [40, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.35, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [20, 0]);
 
   return (
     <motion.div
       ref={containerRef}
-      style={{ opacity, filter: filterBlur, scale, y }}
-      className={cn("transition-all duration-300 ease-out", className)}
+      style={{ opacity, y }}
+      className={cn("will-change-transform", className)}
     >
       {children}
     </motion.div>

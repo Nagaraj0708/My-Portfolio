@@ -26,6 +26,14 @@ const craftTags: CraftTag[] = [
 
 export function ExploreCraft() {
   const constraintsRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <section
@@ -51,7 +59,7 @@ export function ExploreCraft() {
       {/* Interactive Elastic Canvas Stage */}
       <div
         ref={constraintsRef}
-        data-cursor="DRAG"
+        data-cursor="drag"
         className="relative w-full h-[360px] md:h-[420px] rounded-3xl bg-slate-100/70 dark:bg-slate-900/80 border-2 border-dashed border-slate-300 dark:border-slate-800 p-8 flex items-center justify-center overflow-hidden shadow-inner group"
       >
         {/* Subtle Background Guide Grid */}
@@ -75,13 +83,16 @@ export function ExploreCraft() {
             dragTransition={{ bounceStiffness: 400, bounceDamping: 18 }}
             whileDrag={{ scale: 1.1, zIndex: 50, cursor: "grabbing" }}
             whileHover={{ scale: 1.05, zIndex: 40 }}
-            initial={{ x: tag.initialX, y: tag.initialY }}
-            className={`absolute cursor-grab select-none px-5 py-3 rounded-2xl shadow-xl flex flex-col space-y-0.5 border border-white/20 transition-shadow ${tag.colorClass} ${tag.darkColorClass}`}
+            initial={{
+              x: isMobile ? tag.initialX * 0.45 : tag.initialX,
+              y: isMobile ? tag.initialY * 0.65 : tag.initialY,
+            }}
+            className={`absolute cursor-grab select-none px-3.5 py-2 sm:px-5 sm:py-3 rounded-xl sm:rounded-2xl shadow-xl flex flex-col space-y-0.5 border border-white/20 transition-shadow ${tag.colorClass} ${tag.darkColorClass}`}
           >
-            <span className="font-mono text-[9px] uppercase tracking-widest font-black opacity-80">
+            <span className="font-mono text-[8px] sm:text-[9px] uppercase tracking-widest font-black opacity-80">
               {tag.category}
             </span>
-            <span className="font-sans font-extrabold text-sm md:text-base tracking-tight">
+            <span className="font-sans font-extrabold text-xs sm:text-sm md:text-base tracking-tight">
               {tag.name}
             </span>
           </motion.div>

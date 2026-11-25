@@ -13,6 +13,8 @@ import {
 import { projectsData, Project } from "@/data/projects";
 import { ProjectMockupPlaceholder } from "./ProjectMockupPlaceholder";
 import { CaseStudyModal } from "./CaseStudyModal";
+import { SpringCardJump } from "@/components/ui/SpringCardJump";
+import { TextScramble } from "@/components/ui/TextScramble";
 
 /* ─── 3D Perspective Card (Solid Drawing in 3D + Fitts's Law) ─ */
 function ProjectCard({ project, idx }: { project: Project; idx: number }) {
@@ -30,34 +32,42 @@ function ProjectCard({ project, idx }: { project: Project; idx: number }) {
     const y = e.clientY - rect.top - rect.height / 2;
     mouseX.set(x);
     mouseY.set(y);
+
+    // Dynamic spotlight variables
+    e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`);
+    e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`);
   }
 
-  function onMouseLeave() {
+  function onMouseLeave(e: React.MouseEvent<HTMLDivElement>) {
     mouseX.set(0);
     mouseY.set(0);
     setIsHovered(false);
+    e.currentTarget.style.removeProperty("--mouse-x");
+    e.currentTarget.style.removeProperty("--mouse-y");
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30, scale: 0.98 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.5, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      style={{ perspective: 1000, rotateX, rotateY }}
-      onMouseMove={onMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={onMouseLeave}
-      className="group relative [transform-style:preserve-3d] cursor-pointer h-full select-none"
-    >
-      {/* Matte Elevated Card */}
+    <SpringCardJump delay={idx * 0.08} className="h-full">
+      {/* Matte Elevated Card with Interactive Cursor Spotlight */}
       <div
-        className={`relative bg-white dark:bg-[#0B0F17] border rounded-3xl p-5 shadow-lg flex flex-col justify-between h-full transition-all duration-300 ${
+        onMouseMove={onMouseMove}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={onMouseLeave}
+        data-cursor="project"
+        className={`relative bg-white dark:bg-[#0B0F17] border rounded-3xl p-5 shadow-lg flex flex-col justify-between h-full transition-all duration-300 overflow-hidden cursor-pointer select-none ${
           isHovered
             ? "border-[#FF6600]/60 dark:border-[#FF6600]/60 shadow-[0_20px_50px_rgba(255,102,0,0.14)] -translate-y-1.5"
             : "border-neutral-200/90 dark:border-white/10 hover:shadow-xl"
         }`}
       >
+        {/* Cursor-Following Spotlight Glow */}
+        <div
+          className="absolute -inset-px rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 0%), rgba(255, 102, 0, 0.12), transparent 75%)",
+          }}
+        />
         <div>
           {/* Top Interactive Mockup Frame */}
           <div className="relative w-full h-[220px] rounded-2xl overflow-hidden bg-neutral-950 border border-neutral-200/80 dark:border-white/10 shrink-0">
@@ -150,7 +160,7 @@ function ProjectCard({ project, idx }: { project: Project; idx: number }) {
           </div>
         </div>
       </div>
-    </motion.div>
+    </SpringCardJump>
   );
 }
 
@@ -198,7 +208,7 @@ export function Projects() {
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#FF6600]/40 to-transparent" />
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -208,7 +218,7 @@ export function Projects() {
         >
           <div className="inline-flex items-center space-x-2 font-mono text-xs font-bold uppercase tracking-widest text-[#FF6600]">
             <FolderKanban className="w-3.5 h-3.5" />
-            <span>EXECUTIVE PRODUCTION WORK</span>
+            <TextScramble text="EXECUTIVE PRODUCTION WORK" />
           </div>
           <h2 className="font-sans font-black text-3xl sm:text-4xl md:text-5xl text-neutral-900 dark:text-white tracking-tight leading-tight">
             Featured Systems &amp; <span className="text-[#FF6600]">Live Deployments</span>
@@ -218,20 +228,20 @@ export function Projects() {
           </p>
         </motion.div>
 
-        {/* Filter Pills (Hick's Law + Fitts's Law) */}
-        <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-full bg-neutral-100 dark:bg-[#0B0F17] border border-neutral-200 dark:border-white/10">
+        {/* Filter Pills (Always neat single-row horizontal capsule) */}
+        <div className="flex items-center gap-1 sm:gap-1.5 p-1.5 rounded-full bg-neutral-100 dark:bg-[#0B0F17] border border-neutral-200 dark:border-white/10 shrink-0 self-start lg:self-end overflow-x-auto max-w-full">
           {categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setFilterCategory(cat.id)}
-              className={`px-4 py-2 rounded-full font-mono text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full font-mono text-[11px] sm:text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
                 filterCategory === cat.id
                   ? "bg-[#FF6600] text-white shadow-md shadow-[#FF6600]/25"
                   : "text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
               }`}
             >
               <span>{cat.label}</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-black/20 text-[10px]">
+              <span className="px-1.5 py-0.5 rounded-full bg-black/20 text-[10px]">
                 {cat.count}
               </span>
             </button>
